@@ -1,0 +1,19 @@
+{
+    "code-runner.runInTerminal": true,
+    "code-runner.executorMap": {
+        "cpp": "cd $dir && g++ -std=c++17 $fileName -o $fileNameWithoutExt -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network -lsfml-audio && ./$fileNameWithoutExt"  // SFML C++ execution
+    },
+    "code-runner.showExecutionMessage": false,
+    "editor.find.autoFindInSelection": "multiline",
+    "editor.cursorBlinking": "expand",
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.wrappingIndent": "deepIndent",
+    "editor.tabCompletion": "off",
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.multiCursorMergeOverlapping": true,
+    "editor.lineNumbers": "on",
+    "editor.lineHeight": 1.7,
+    "editor.lightbulb.enabled": "off",
+    "editor.guides.highlightActiveIndentation": true,
+    "editor.guides.bracketPairs": "active", // Optionally hide execution message
+}

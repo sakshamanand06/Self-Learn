@@ -1,0 +1,21 @@
+# Compiled files
+*
+!*.*
+*.o
+*.out
+a.out
+
+# Keep source files
+!*.c
+!*.cpp
+!*.py
+!*.h
+!Makefile
+!*.md
+!.gitignore
+!*/
+
+# Unwanted folders
+DSA/
+python\ files/
+selenium/
