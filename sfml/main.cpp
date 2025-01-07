@@ -4,7 +4,6 @@
 using namespace sf;
 using namespace std;
 
-
 int main(){
     RenderWindow TTT(VideoMode(300,300), "Bouncing mushroom.");
     Texture mushroomTexture;

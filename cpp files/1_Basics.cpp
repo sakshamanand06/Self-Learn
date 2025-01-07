@@ -23,6 +23,7 @@ int main(){
     // b=65 is equivalent to b = 'A', both will print A only.
     // cout<<b;
     // typecasting:
+    cout<<"Enter no. to half: ";
     int flt;
     cin>>flt;
     cout<<float(flt)/2<<endl;
