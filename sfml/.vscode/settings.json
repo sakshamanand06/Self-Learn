@@ -15,5 +15,5 @@
     "editor.lineHeight": 1.7,
     "editor.lightbulb.enabled": "off",
     "editor.guides.highlightActiveIndentation": true,
-    "editor.guides.bracketPairs": "active", // Optionally hide execution message
+    "editor.guides.bracketPairs": "active" // Optionally hide execution message
 }

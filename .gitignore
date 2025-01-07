@@ -4,6 +4,7 @@
 *.o
 *.out
 a.out
+.vscode
 
 # Keep source files
 !*.c

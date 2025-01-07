@@ -2,7 +2,7 @@
 #include "add.h"
 
 int main(){
-    // std::cout << add(3,4);
+    std::cout << add(3,4);
     // for(int i = 0; i<5; i++){ 
     //     if(7 & (1<<i)) std::cout << "+" << std::endl;
     // }
@@ -11,7 +11,7 @@ int main(){
     for(int i=0; i<5; i++){
         n %= 3
         ;
-        std::cout << n;
+        // std::cout << n;
         n++;
     }
     std::cout << "\n\n";
