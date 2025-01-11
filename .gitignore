@@ -5,6 +5,7 @@
 *.out
 a.out
 .vscode
+.txt
 
 # Keep source files
 !*.c
@@ -20,3 +21,7 @@ a.out
 DSA/
 python\ files/
 selenium/
+
+#Some frequently changin files not useful
+0_Test_Programsc.c
+0_Test_Programscpp.cpp
