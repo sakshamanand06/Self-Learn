@@ -1,46 +1,50 @@
 #include<stdio.h>
 
-#define RESET 0
-#define RUN 1
-#define STOP 0
-
 int main(){
-    FILE* fil = fopen("test.txt", "r");
-    int c, lenc[10], len = RESET, state = RUN;
-    for(int i = 0; i<10; ++i) lenc[i] = 0;
-    while((c = fgetc(fil)) != EOF){
+    FILE* textFile = fopen("test.txt", "r");
+    int maxLen = 21;
+    int c, lengthArray[maxLen], wordLength = 0;
+    for(int i = 0; i<maxLen; ++i) lengthArray[i] = 0;
+    while(1){
+        c = fgetc(textFile);
+        // c=getchar(); // for terminal input
         if(c == ' ' || c == '\t' || c == '\n'){
-            if(len > 0) ++lenc[len-1];
-            len = RESET;
+            if(wordLength > 0) ++lengthArray[wordLength];
+            wordLength = 0;
         }
-        else ++len;
+        else ++wordLength;
+        if(c==EOF) break;
+        // if(c=='\n') break; // for terminal input
     }
-    // for(int i = 0; i<10; ++i){
-    //     printf("%3d --> ", i+1);
-    //     for(int j = 0; j<lenc[i]; ++j) printf("*");
-    //     printf("\n");
-    // }
-    for(int i = 0; i<10; ++i) printf("%3d", i+1);
-    printf("\n");
-    while(state){
-        for(int i = 0; i<10; ++i){
-            if(lenc[i]){
-                printf("  *");
-                --lenc[i];
+    for(int i = 1; i<maxLen; ++i){
+        printf("%3d --> ", i);
+        for(int j = 0; j<lengthArray[i]; ++j) printf("*");
+        printf("\n");
+    }
+
+    int maxv;
+    for(int i=1; i<maxLen; i++) if(maxv<lengthArray[i]) maxv=lengthArray[i];
+    for(int lr = maxv+1; lr>0; lr--){
+        printf("%3d |", lr);
+        for(int i=1; i<maxLen; i++){
+            if(lengthArray[i] == lr){
+                printf(" * ");
+                --lengthArray[i];
             }
             else printf("   ");
         }
         printf("\n");
-        for(int i = 0; i<10; ++i){
-            if(lenc[i] == 0) state = STOP;
-            else{
-                state = RUN;
-                break;
-            }
-        }
     }
-    printf("\nFin");
+    printf("    +");
+    for(int i=1; i<maxLen; i++){
+        printf("---");
+    }
+    printf("\n     ");
+    for(int i=1; i<maxLen; i++){
+        printf("%2d ", i);
+    }
 
+    fclose(textFile);
     printf("\n\n");
 return 0;
 }
