@@ -5,7 +5,7 @@
 *.out
 a.out
 .vscode
-.txt
+*.txt
 
 # Keep source files
 !*.c
