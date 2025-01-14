@@ -84,6 +84,9 @@ int main()
     int order = 3; // order of tic tac toe matrix
     float siz;
 
+    bool menu = true;
+    // menu=false;
+
     reset:
     int player = 1; // first player(1 means X)
     int can_play = -1; // can play anywhere in start
@@ -111,6 +114,7 @@ int main()
     Color ogrid(210, 180, 80, 255); // Pale Gold // outer gridlines
     Color igrid(178, 34, 34, 255); // Firebrick // inner gridlines
 
+    // Game graphics
     RectangleShape ogridlines(Vector2f(game.getSize().x, ogridt));
     ogridlines.setFillColor(ogrid);
     
@@ -142,6 +146,17 @@ int main()
 
     RectangleShape tokens[] = {D, X, O, P};
 
+    // < for menu
+    RectangleShape resume(Vector2f(200.0f, 50.0f));
+    resume.setOrigin(Vector2f(resume.getLocalBounds().width/2, resume.getLocalBounds().top/2));
+    resume.setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2));
+
+    RectangleShape play(Vector2f(200.0f, 50.0f));
+    play.setOrigin(Vector2f(play.getLocalBounds().width/2, play.getLocalBounds().top/2));
+    play.setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2+100.0));
+
+    // for menu >
+
     Font familyft;
 
     if(!familyft.loadFromFile("Purisa-Bold.ttf"))
@@ -150,6 +165,17 @@ int main()
     Text state;
     state.setFont(familyft);
     state.setFillColor(Color::Red);
+
+
+    Text playt;
+    playt.setFont(familyft);
+    playt.setString("Play");
+    playt.setFillColor(Color::Black);
+    Text resumet;
+    resumet.setFont(familyft);
+    resumet.setString("Continue");
+    resumet.setFillColor(Color::Black);
+
 
     Text pl;
     bool won = false;
@@ -160,10 +186,71 @@ int main()
     Vector2u win_size; // windows size
     Vector2f offset, board_size;
 
+
+    menuing:
+    if(menu){
+    while(game.isOpen())
+    {
+        game.clear(ibg);
+        Event minu;
+        while(game.pollEvent(minu)){
+            switch(minu.type){
+                case Event::MouseButtonPressed:
+                if(play.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                    if(Mouse::isButtonPressed(Mouse::Left)){
+                        menu = false;
+                        goto reset;
+                    }
+                }
+                else if(resume.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                    if(Mouse::isButtonPressed(Mouse::Left)){
+                        goto gaming;
+                    }
+                }
+                break;
+                
+                case Event::MouseMoved:
+                if(play.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                        play.setFillColor(Color::Red);
+                else if(resume.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                        resume.setFillColor(Color::Red);
+                else{
+                    play.setFillColor(Color::White);
+                    resume.setFillColor(Color::White);
+                }
+                break;
+                
+                case Event::Closed:
+                game.close();
+                break;
+                case Event::Resized:
+                View visibleA(FloatRect(0,0, minu.size.width, minu.size.height));
+                game.setView(visibleA);
+                break;
+            }
+        }
+        
+        // play.setPosition(Vector2f(10.0, 10.0));
+        // play.setSize(Vector2f(0.5*game.getSize().x, 0.5*game.getSize().y));
+        playt.setOrigin(playt.getLocalBounds().getSize().x/2, playt.getLocalBounds().getSize().y/2);
+        playt.setPosition(Vector2f(play.getGlobalBounds().getPosition().x + play.getLocalBounds().getSize().x/2.0, play.getGlobalBounds().getPosition().y + play.getLocalBounds().getSize().y/2.0));
+        resumet.setOrigin(resumet.getLocalBounds().getSize().x/2, resumet.getLocalBounds().getSize().y/2);
+        resumet.setPosition(Vector2f(resume.getGlobalBounds().getPosition().x + resume.getLocalBounds().getSize().x/2.0, resume.getGlobalBounds().getPosition().y + resume.getLocalBounds().getSize().y/2.0));
+
+        game.draw(play);
+        game.draw(resume);
+        game.draw(playt);
+        game.draw(resumet);
+        game.display();
+        // cout<<Mouse::getPosition(game).x<<endl;
+    }
+    }
+    else{
+    gaming:
     while(game.isOpen())
     {
         game.clear(obg);
-        win_size = game.getSize();
+        win_size = game.getSize(); // to only call getSize once for optimization
 
         Event interacted;
         while(game.pollEvent(interacted))
@@ -219,7 +306,7 @@ int main()
                                     
                                     // Tie check
                                     if(++gamestate[ondexy][order*order+1] == order*order)
-                                    {
+                                    if(Mouse::isButtonPressed(Mouse::Middle)){
                                         // display(gamestate[ondexy], order);
                                         cout<<"Tied"<<endl;
                                         gamestate[ondexy][order*order] = -1;
@@ -241,11 +328,16 @@ int main()
                     }
                     else cout<<"Outside board"<<endl;
                 }
-                else
+                else if(Mouse::isButtonPressed(Mouse::Right))
                 {
                     for(int i=0; i<order*order; i++) delete[] gamestate[i];
                     ++order;
+                    menu = false;
                     goto reset;
+                }
+                else{
+                    menu = true;
+                    goto menuing;
                 }
                 break;
 
@@ -345,6 +437,7 @@ int main()
             game.close();
         }
         game.display();
+    }
     }
     for(int i=0; i<order*order; i++) delete []gamestate[i];
 
