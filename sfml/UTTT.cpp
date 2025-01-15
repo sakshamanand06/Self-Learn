@@ -84,9 +84,6 @@ int main()
     int order = 3; // order of tic tac toe matrix
     float siz;
 
-    bool menu = true;
-    // menu=false;
-    
     // Colors
     Color obg(10, 10, 40, 255); // Dark Midnight Blue // outer game background
     Color ibg(112, 128, 144, 255); // Slate Gray // inner board background
@@ -106,6 +103,8 @@ int main()
     // Tokens graphics
     Texture t;
     if(!t.loadFromFile("Mushroom.png")) cout<<"error loading texture";
+    Texture pm;
+    if(!pm.loadFromFile("plusminus.jpg")) cout<<"Error loading pm";
 
     RectangleShape X(Vector2f(5.0f, 5.0f));
     X.setTexture(&t);
@@ -117,36 +116,50 @@ int main()
     P.setTexture(&t);
     P.setFillColor(Color::Green);
     RectangleShape D(Vector2f(5.0f, 5.0f));
-    D.setFillColor(Color(112, 128, 144, 255));
+    D.setFillColor(ibg); // Default square
     // CircleShape O(5.0f);
     // O.setTexture(&t);
     // O.setFillColor(Color::Red);
     RectangleShape tokens[] = {D, X, O, P};
 
-    // < for menu
-    RectangleShape resume(Vector2f(200.0f, 50.0f));
-    resume.setOrigin(Vector2f(resume.getLocalBounds().width/2, resume.getLocalBounds().top/2));
-    resume.setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2));
+    RectangleShape menuButtons[6];
+    menuButtons[0].setSize(Vector2f(200.0f, 50.0f));
+    menuButtons[1].setSize(Vector2f(200.0f, 50.0f));
+    menuButtons[2].setSize(Vector2f(50.0f, 50.0f));
+    menuButtons[3].setSize(Vector2f(50.0f, 50.0f));
+    for(int i=0; i<6; i++){
+        menuButtons[i].setOrigin(Vector2f(menuButtons[i].getLocalBounds().getSize().x/2, menuButtons[i].getLocalBounds().getSize().y/2));
+    }
+    menuButtons[0].setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2));
+    menuButtons[1].setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2+100.0));
+    menuButtons[2].setPosition(Vector2f(380.0, 50.0));
+    menuButtons[3].setPosition(Vector2f(440.0, 50.0));
 
-    RectangleShape play(Vector2f(200.0f, 50.0f));
-    play.setOrigin(Vector2f(play.getLocalBounds().width/2, play.getLocalBounds().top/2));
-    play.setPosition(Vector2f(game.getSize().x/2, game.getSize().y/2+100.0));
-    // for menu >
+    menuButtons[2].setTexture(&pm);
+    menuButtons[3].setTexture(&pm);
+    // menuButtons[2].setTextureRect(IntRect(Vector2i(50, 60), Vector2i(234,250)));
+    menuButtons[2].setTextureRect(IntRect({50, 60}, {234,250}));
+    menuButtons[3].setTextureRect(IntRect({325, 60}, {234,250}));
+
     Font familyft;
     if(!familyft.loadFromFile("Purisa-Bold.ttf"))
     cout<<"error"<<endl;
+    
+    Text menuTexts[6];
+    menuTexts[0].setString("Continue");
+    menuTexts[1].setString("Play");
+    for(int i=0; i<6; i++){
+        menuTexts[i].setFont(familyft);
+        menuTexts[i].setFillColor(Color::Black);
+        menuTexts[i].setOrigin(menuTexts[i].getLocalBounds().getSize().x/2, menuTexts[i].getLocalBounds().getSize().y/2);
+    }
+    
+    menuButtons[0].setSize(Vector2f(0.0f, 0.0f));
+
 
     Text state;
     state.setFont(familyft);
     state.setFillColor(Color::Red);
-    Text playt;
-    playt.setFont(familyft);
-    playt.setString("Play");
-    playt.setFillColor(Color::Black);
-    Text resumet;
-    resumet.setFont(familyft);
-    resumet.setString("Continue");
-    resumet.setFillColor(Color::Black);
 
     Text pl;
     bool won = false;
@@ -157,6 +170,9 @@ int main()
 
     Vector2u win_size; // windows size
     Vector2f offset, board_size;
+
+    bool continu = false;
+    bool menu = true;
 
     reset:
     int player = 1; // first player(1 means X)
@@ -181,66 +197,8 @@ int main()
     int mxi = 0; // index of mx
     bool rep; // if mx repeats
 
+    if(menu) goto menuing;
 
-    menuing:
-    if(menu){
-    while(game.isOpen())
-    {
-        game.clear(ibg);
-        Event minu;
-        while(game.pollEvent(minu)){
-            switch(minu.type){
-                case Event::MouseButtonPressed:
-                if(play.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
-                    if(Mouse::isButtonPressed(Mouse::Left)){
-                        menu = false;
-                        goto reset;
-                    }
-                }
-                else if(resume.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
-                    if(Mouse::isButtonPressed(Mouse::Left)){
-                        goto gaming;
-                    }
-                }
-                break;
-                
-                case Event::MouseMoved:
-                if(play.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
-                        play.setFillColor(Color::Red);
-                else if(resume.getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
-                        resume.setFillColor(Color::Red);
-                else{
-                    play.setFillColor(Color::White);
-                    resume.setFillColor(Color::White);
-                }
-                break;
-                
-                case Event::Closed:
-                game.close();
-                break;
-                case Event::Resized:
-                View visibleA(FloatRect(0,0, minu.size.width, minu.size.height));
-                game.setView(visibleA);
-                break;
-            }
-        }
-        
-        // play.setPosition(Vector2f(10.0, 10.0));
-        // play.setSize(Vector2f(0.5*game.getSize().x, 0.5*game.getSize().y));
-        playt.setOrigin(playt.getLocalBounds().getSize().x/2, playt.getLocalBounds().getSize().y/2);
-        playt.setPosition(Vector2f(play.getGlobalBounds().getPosition().x + play.getLocalBounds().getSize().x/2.0, play.getGlobalBounds().getPosition().y + play.getLocalBounds().getSize().y/2.0));
-        resumet.setOrigin(resumet.getLocalBounds().getSize().x/2, resumet.getLocalBounds().getSize().y/2);
-        resumet.setPosition(Vector2f(resume.getGlobalBounds().getPosition().x + resume.getLocalBounds().getSize().x/2.0, resume.getGlobalBounds().getPosition().y + resume.getLocalBounds().getSize().y/2.0));
-
-        game.draw(play);
-        game.draw(resume);
-        game.draw(playt);
-        game.draw(resumet);
-        game.display();
-        // cout<<Mouse::getPosition(game).x<<endl;
-    }
-    }
-    else{
     gaming:
     while(game.isOpen())
     {
@@ -325,13 +283,10 @@ int main()
                 }
                 else if(Mouse::isButtonPressed(Mouse::Right))
                 {
-                    for(int i=0; i<order*order; i++) delete[] gamestate[i];
-                    ++order;
-                    menu = false;
-                    goto reset;
-                }
-                else{
-                    menu = true;
+                    // for(int i=0; i<order*order; i++) delete[] gamestate[i];
+                    // menu = false;
+                    // goto reset;
+                    continu = true;
                     goto menuing;
                 }
                 break;
@@ -433,7 +388,93 @@ int main()
         }
         game.display();
     }
+
+    menuing:
+    while(game.isOpen())
+    {
+        game.clear(ibg);
+        Event minu;
+        while(game.pollEvent(minu)){
+            switch(minu.type){
+                case Event::MouseButtonPressed:
+                if(Mouse::isButtonPressed(Mouse::Left)){
+                    if(menuButtons[0].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                        goto gaming;
+                    else if(menuButtons[1].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                            menu = false;
+                            goto reset;
+                    }
+                    else if(menuButtons[2].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                        ++order;
+                        continu = false;
+                    }
+                    else if(menuButtons[3].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                        --order;
+                        continu = false;
+                    }
+                }
+                break;
+                
+                // case Event::MouseMoved:
+                // if(menuButtons[1].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                //         menuButtons[1].setFillColor(Color::Red);
+                // else if(menuButtons[0].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                //         menuButtons[0].setFillColor(Color::Red);
+                // else{
+                //     menuButtons[1].setFillColor(Color::White);
+                //     menuButtons[0].setFillColor(Color::White);
+                // }
+                // break;
+                
+                case Event::Closed:
+                game.close();
+                break;
+                case Event::Resized:
+                View visibleA(FloatRect(0,0, minu.size.width, minu.size.height));
+                game.setView(visibleA);
+                break;
+            }
+        }
+
+        if(menuButtons[0].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+            menuButtons[0].setFillColor(Color::Red);
+        else if(menuButtons[1].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
+                menuButtons[1].setFillColor(Color::Red);
+        else if(menuButtons[2].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                menuButtons[2].setScale(Vector2f(1.2, 1.2));
+                menuButtons[2].setOrigin(Vector2f(menuButtons[2].getLocalBounds().getSize().x/2, menuButtons[2].getLocalBounds().getSize().y/2));
+        }
+        else if(menuButtons[3].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game)))){
+                menuButtons[3].setScale(Vector2f(1.2, 1.2));
+                menuButtons[3].setOrigin(Vector2f(menuButtons[2].getLocalBounds().getSize().x/2, menuButtons[2].getLocalBounds().getSize().y/2));
+        }
+        else{
+            menuButtons[0].setFillColor(Color::White);
+            menuButtons[1].setFillColor(Color::White);
+            menuButtons[2].setScale(Vector2f(1, 1));
+            menuButtons[3].setScale(Vector2f(1, 1));
+        }
+        
+        // Setting texts in middle of buttons
+        for(int i=0; i<2; i++){
+            menuTexts[i].setPosition(Vector2f(menuButtons[i].getGlobalBounds().getPosition().x + menuButtons[i].getLocalBounds().getSize().x/2.0, menuButtons[i].getGlobalBounds().getPosition().y + menuButtons[i].getLocalBounds().getSize().y/2.0));
+        }
+        // drawing every button and text except first(continue button)
+        for(int i=1; i<4; i++){
+            game.draw(menuButtons[i]);
+        }
+        for(int i=1; i<2; i++){
+            game.draw(menuTexts[i]);
+        }
+        // Only draw continue button if the game has started once
+        if(continu){
+            menuButtons[0].setSize(Vector2f(200.0f, 50.0f));
+            game.draw(menuButtons[0]);
+            game.draw(menuTexts[0]);
+        }
+        game.display();
     }
+
     for(int i=0; i<order*order; i++) delete []gamestate[i];
 
     return 0;
