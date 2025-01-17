@@ -6,7 +6,6 @@
 *.exe
 a.out
 .vscode
-.vscode/*
 *.txt
 
 # Keep source files
@@ -27,3 +26,4 @@ selenium/
 #Some frequently changin files not useful
 0_Test_Programsc.c
 0_Test_Programscpp.cpp
+**/.vscode/*
