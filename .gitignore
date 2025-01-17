@@ -3,8 +3,10 @@
 !*.*
 *.o
 *.out
+*.exe
 a.out
 .vscode
+.vscode/*
 *.txt
 
 # Keep source files
