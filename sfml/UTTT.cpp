@@ -1,8 +1,13 @@
 // Currently last game win check function with pl is only made for 2 players
+// #define SFML_STATIC
 
 #include<SFML/Graphics.hpp>
-#include<unistd.h>
+// #include<unistd.h>
 #include<iostream>
+#include "Mushroom.h"
+#include "plusminus.h"
+#include "Purisa-Bold.h"
+
 using namespace std;
 using namespace sf;
 
@@ -81,7 +86,7 @@ int main()
     float ogridt = 4.0f; // thickness of outer gridlines
     float igridt = 2.0f; // thickness of inner gridlines
     int players = 2; // total number of players
-    int order = 3; // order of tic tac toe matrix
+    int order = 4; // order of tic tac toe matrix
     float siz;
 
     // Colors
@@ -102,9 +107,10 @@ int main()
     
     // Tokens graphics
     Texture t;
-    if(!t.loadFromFile("Mushroom.png")) cout<<"error loading texture";
+    // if(!t.loadFromFile("Mushroom.png")) cout<<"error loading texture";
+    if(!t.loadFromMemory(Mushroom_png, Mushroom_png_len)) cout<<"error loading mushroom";
     Texture pm;
-    if(!pm.loadFromFile("plusminus.jpg")) cout<<"Error loading pm";
+    if(!pm.loadFromMemory(plusminus_jpg, plusminus_jpg_len)) cout<<"Error loading pm";
 
     RectangleShape X(Vector2f(5.0f, 5.0f));
     X.setTexture(&t);
@@ -137,13 +143,11 @@ int main()
 
     menuButtons[2].setTexture(&pm);
     menuButtons[3].setTexture(&pm);
-    // menuButtons[2].setTextureRect(IntRect(Vector2i(50, 60), Vector2i(234,250)));
     menuButtons[2].setTextureRect(IntRect({50, 60}, {234,250}));
     menuButtons[3].setTextureRect(IntRect({325, 60}, {234,250}));
 
     Font familyft;
-    if(!familyft.loadFromFile("Purisa-Bold.ttf"))
-    cout<<"error"<<endl;
+    if(!familyft.loadFromMemory(Purisa_Bold_ttf, Purisa_Bold_ttf_len)) cout<<"error"<<endl;
     
     Text menuTexts[6];
     menuTexts[0].setString("Continue");
@@ -153,6 +157,11 @@ int main()
         menuTexts[i].setFillColor(Color::Black);
         menuTexts[i].setOrigin(menuTexts[i].getLocalBounds().getSize().x/2, menuTexts[i].getLocalBounds().getSize().y/2);
     }
+    Text ordertxt;
+    ordertxt.setFont(familyft);
+    ordertxt.setFillColor(Color::Green);
+    ordertxt.setOrigin(ordertxt.getLocalBounds().getSize().x/2, ordertxt.getLocalBounds().getSize().y/2);
+    ordertxt.setPosition({100.0, 35.0});
     
     menuButtons[0].setSize(Vector2f(0.0f, 0.0f));
 
@@ -383,7 +392,7 @@ int main()
             game.clear(Color::Black);
             game.draw(pl);
             game.display();
-            sleep(5);
+            // sleep(5);
             game.close();
         }
         game.display();
@@ -436,6 +445,8 @@ int main()
             }
         }
 
+        menuButtons[0].setFillColor(Color::White);
+        menuButtons[1].setFillColor(Color::White);
         if(menuButtons[0].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
             menuButtons[0].setFillColor(Color::Red);
         else if(menuButtons[1].getGlobalBounds().contains(Vector2f(Mouse::getPosition(game))))
@@ -449,8 +460,6 @@ int main()
                 menuButtons[3].setOrigin(Vector2f(menuButtons[2].getLocalBounds().getSize().x/2, menuButtons[2].getLocalBounds().getSize().y/2));
         }
         else{
-            menuButtons[0].setFillColor(Color::White);
-            menuButtons[1].setFillColor(Color::White);
             menuButtons[2].setScale(Vector2f(1, 1));
             menuButtons[3].setScale(Vector2f(1, 1));
         }
@@ -472,6 +481,8 @@ int main()
             game.draw(menuButtons[0]);
             game.draw(menuTexts[0]);
         }
+        ordertxt.setString("Order: " + to_string(order));
+        game.draw(ordertxt);
         game.display();
     }
 

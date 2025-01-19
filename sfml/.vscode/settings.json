@@ -15,5 +15,9 @@
     "editor.lineHeight": 1.7,
     "editor.lightbulb.enabled": "off",
     "editor.guides.highlightActiveIndentation": true,
-    "editor.guides.bracketPairs": "active" // Optionally hide execution message
+    "editor.guides.bracketPairs": "active",
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "E:\\dev\\Setups\\winlibs-x86_64-posix-seh-gcc-14.2.0-mingw-w64ucrt-12.0.0-r2_2\\mingw64\\bin\\gcc.exe" // Optionally hide execution message
 }
