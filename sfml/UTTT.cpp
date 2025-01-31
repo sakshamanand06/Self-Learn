@@ -1,5 +1,5 @@
 // Currently last game win check function with pl is only made for 2 players
-// #define SFML_STATIC
+#define SFML_STATIC
 
 #include<SFML/Graphics.hpp>
 // #include<unistd.h>

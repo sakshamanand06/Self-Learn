@@ -16,11 +16,11 @@ int main(){
         if(c==EOF) break;
         // if(c=='\n') break; // for terminal input
     }
-    for(int i = 1; i<maxLen; ++i){
-        printf("%3d --> ", i);
-        for(int j = 0; j<lengthArray[i]; ++j) printf("*");
-        printf("\n");
-    }
+    // for(int i = 1; i<maxLen; ++i){
+    //     printf("%3d --> ", i);
+    //     for(int j = 0; j<lengthArray[i]; ++j) printf("*");
+    //     printf("\n");
+    // }
 
     int maxv;
     for(int i=1; i<maxLen; i++) if(maxv<lengthArray[i]) maxv=lengthArray[i];
